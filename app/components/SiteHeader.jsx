@@ -63,7 +63,7 @@ export function SiteHeader({ subtitle = 'Protocol Knowledge Base', showStatus = 
     cancelClose();
     closeTimer.current = setTimeout(() => {
       setOpenMenu(null);
-    }, 220);
+    }, 260);
   };
 
   const handleBlur = (event) => {

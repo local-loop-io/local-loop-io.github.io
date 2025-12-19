@@ -413,6 +413,37 @@ nav {
   box-shadow: 0 14px 24px rgba(11, 27, 43, 0.18);
 }
 
+.sticky-cta {
+  position: fixed;
+  right: clamp(16px, 4vw, 36px);
+  bottom: clamp(16px, 4vw, 36px);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+  box-shadow: 0 16px 32px rgba(224, 108, 71, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  z-index: 20;
+}
+
+.sticky-cta-sub {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.sticky-cta:hover,
+.sticky-cta:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 34px rgba(224, 108, 71, 0.42);
+}
+
 .section {
   padding: 24px var(--gutter) 48px;
   max-width: var(--page-max);
@@ -460,6 +491,31 @@ nav {
   text-decoration: none;
   color: var(--accent);
   font-weight: 600;
+}
+
+.card[data-icon] {
+  position: relative;
+  padding-top: 46px;
+}
+
+.card[data-icon]::before {
+  content: attr(data-icon);
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(47, 158, 133, 0.16);
+  border: 1px solid rgba(47, 158, 133, 0.4);
+  color: var(--accent-2);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .footer {
@@ -613,6 +669,12 @@ nav {
 @media (max-width: 720px) {
   .hero {
     padding-top: 12px;
+  }
+
+  .sticky-cta {
+    left: 16px;
+    right: 16px;
+    align-items: flex-start;
   }
 
   .viewer-content {
