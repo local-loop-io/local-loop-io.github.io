@@ -4,33 +4,39 @@ import { SiteFooter } from './components/SiteFooter';
 export default function HomePage() {
   return (
     <>
-      <SiteHeader subtitle="Protocol Platform" />
+      <SiteHeader />
 
-      <section className="hero">
-        <div className="hero-card">
-          <div className="badge">Federated circular economy infrastructure</div>
-          <h2>Host the entire LOOP Protocol stack in one place.</h2>
+      <section className="hero hero-wide">
+        <div className="hero-wide-bg" aria-hidden="true">
+          <span className="loop-orbit loop-orbit-one"></span>
+          <span className="loop-orbit loop-orbit-two"></span>
+          <span className="loop-orbit loop-orbit-three"></span>
+        </div>
+        <div className="hero-wide-content">
+          <div className="hero-kicker">LOOP Protocol</div>
+          <h2>Local Optimization with Overflow Protocol (LOOP)</h2>
           <p>
-            This hub curates the specification, schemas, examples, and governance docs for
-            the LOOP Protocol. Use it as the canonical reference for implementers and city
-            operators. The project is an early, low-TRL concept with no public pilots yet.
+            A proposed federated protocol for material identity, exchange, and settlement
+            across city loops. Designed to keep sovereignty local while enabling a shared
+            circular economy network.
           </p>
           <div className="cta-row">
-            <a className="button primary" href="/protocol/spec">Read the Spec</a>
+            <a className="button primary" href="/protocol/spec">Read the specification</a>
             <a className="button secondary" href="/interest">Register interest</a>
           </div>
         </div>
-        <div className="hero-card">
-          <h3>What lives in this hub</h3>
-          <p>
-            A single place for protocol artifacts, implementation guidance, and sample
-            city portal experiences.
-          </p>
-          <div className="table-list">
-            <div><span>Protocol</span><div>Specification, changelog, security notes</div></div>
-            <div><span>Library</span><div>Schemas and validated example payloads</div></div>
-            <div><span>Docs</span><div>Operator and developer guides</div></div>
-            <div><span>Portals</span><div>MaterialDNA and demo city landing pages</div></div>
+        <div className="hero-wide-panels">
+          <div className="hero-panel">
+            <h3>MaterialDNA</h3>
+            <p>Unified material identity for traceability, provenance, and compliance.</p>
+          </div>
+          <div className="hero-panel">
+            <h3>Federated nodes</h3>
+            <p>Autonomous city loops that interoperate through shared schemas.</p>
+          </div>
+          <div className="hero-panel">
+            <h3>Operator playbooks</h3>
+            <p>Security, governance, and implementation guidance in one hub.</p>
           </div>
         </div>
       </section>
