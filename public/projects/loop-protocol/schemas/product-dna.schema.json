@@ -1,15 +1,17 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://local-loop-io.github.io/projects/loop-protocol/schemas/v0.2.0/material-dna.schema.json",
-  "title": "MaterialDNA",
-  "description": "Material identity and metadata schema — LOOP v0.2.0 (DPP-compatible baseline)",
+  "$id": "https://local-loop-io.github.io/projects/loop-protocol/schemas/v0.2.0/product-dna.schema.json",
+  "title": "ProductDNA",
+  "description": "Product identity and metadata schema — LOOP v0.2.0 (DPP-aligned, ESPR Art. 9-10 compatible). Products reference constituent materials via material_ids.",
   "type": "object",
   "required": [
     "@context",
     "@type",
     "schema_version",
     "id",
-    "category",
+    "product_category",
+    "name",
+    "condition",
     "quantity",
     "origin_city",
     "current_city",
@@ -27,63 +29,70 @@
     "@type": {
       "description": "Object type identifier",
       "type": "string",
-      "const": "MaterialDNA"
+      "const": "ProductDNA"
     },
     "schema_version": {
       "description": "Schema version for the interop flow. Emitters SHOULD use 0.2.0; receivers SHOULD accept additive minor/patch releases.",
       "type": "string",
       "pattern": "^0\\.[1-9]\\d*\\.\\d+$",
       "examples": [
-        "0.1.1",
         "0.2.0"
       ]
     },
     "id": {
-      "description": "Unique MaterialDNA identifier",
+      "description": "Unique ProductDNA identifier",
       "type": "string",
-      "pattern": "^[A-Z]{2}-[A-Z]{3}-\\d{4}-[A-Z]+-[A-Z0-9]{6,}$",
+      "pattern": "^PRD-[A-Z0-9-]{8,}$",
       "examples": [
-        "DE-MUC-2025-PLASTIC-B847F3"
+        "PRD-DE-MUC-2025-LAPTOP-A1B2C3"
       ]
     },
-    "category": {
-      "description": "Standardized material category",
+    "product_category": {
+      "description": "Standardized product category",
       "type": "string",
       "enum": [
-        "plastic-pet",
-        "plastic-hdpe",
-        "plastic-pvc",
-        "plastic-ldpe",
-        "plastic-pp",
-        "plastic-ps",
-        "plastic-mixed",
-        "metal-steel",
-        "metal-aluminum",
-        "metal-copper",
-        "metal-mixed",
-        "organic-food",
-        "organic-garden",
-        "organic-wood",
-        "glass-clear",
-        "glass-brown",
-        "glass-green",
-        "glass-mixed",
-        "paper-clean",
-        "paper-newsprint",
-        "cardboard",
-        "paper-mixed",
-        "textile-cotton",
-        "textile-wool",
-        "textile-synthetic",
-        "textile-mixed",
-        "ewaste-computers",
-        "ewaste-phones",
-        "ewaste-batteries",
-        "ewaste-mixed"
+        "furniture-office",
+        "furniture-residential",
+        "furniture-industrial",
+        "building-structural",
+        "building-fixture",
+        "building-hvac",
+        "building-electrical",
+        "electronics-computing",
+        "electronics-mobile",
+        "electronics-appliance",
+        "electronics-components",
+        "textile-garment",
+        "textile-industrial",
+        "packaging-reusable",
+        "vehicle-parts",
+        "equipment-industrial",
+        "equipment-medical"
+      ]
+    },
+    "name": {
+      "description": "Product name or short description",
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 200,
+      "examples": [
+        "Standing Desk — Ergotron WorkFit"
+      ]
+    },
+    "condition": {
+      "description": "Physical condition of the product",
+      "type": "string",
+      "enum": [
+        "new",
+        "like-new",
+        "good",
+        "fair",
+        "poor",
+        "for-parts"
       ]
     },
     "quantity": {
-      "description": "Amount of material",
+      "description": "Amount of product units",
       "type": "object",
       "required": [
         "value",
@@ -95,8 +104,8 @@
           "type": "number",
           "minimum": 0,
           "examples": [
-            1000,
-            500.5
+            12,
+            1
           ]
         },
         "unit": {
@@ -113,22 +122,13 @@
             "bundle"
           ],
           "examples": [
-            "kg"
+            "piece"
           ]
         }
       }
     },
-    "quality": {
-      "description": "Quality score (0.0 to 1.0)",
-      "type": "number",
-      "minimum": 0,
-      "maximum": 1,
-      "examples": [
-        0.95
-      ]
-    },
     "origin_city": {
-      "description": "City that registered the material",
+      "description": "City that registered the product",
       "type": "string",
       "minLength": 2,
       "maxLength": 80,
@@ -137,7 +137,7 @@
       ]
     },
     "current_city": {
-      "description": "City currently holding custody of the material",
+      "description": "City currently holding custody of the product",
       "type": "string",
       "minLength": 2,
       "maxLength": 80,
@@ -145,8 +145,132 @@
         "Munich"
       ]
     },
+    "available_from": {
+      "description": "When product becomes available (ISO 8601)",
+      "type": "string",
+      "format": "date-time",
+      "examples": [
+        "2026-03-15T08:00:00Z"
+      ]
+    },
+    "expires": {
+      "description": "When product listing expires (ISO 8601)",
+      "type": "string",
+      "format": "date-time"
+    },
+    "manufacturer": {
+      "description": "Product manufacturer name",
+      "type": "string",
+      "maxLength": 200,
+      "examples": [
+        "Ergotron"
+      ]
+    },
+    "model": {
+      "description": "Product model name or number",
+      "type": "string",
+      "maxLength": 200,
+      "examples": [
+        "WorkFit-S"
+      ]
+    },
+    "manufacture_year": {
+      "description": "Year of manufacture",
+      "type": "integer",
+      "minimum": 1900,
+      "examples": [
+        2021
+      ]
+    },
+    "serial_number": {
+      "description": "Product serial number",
+      "type": "string",
+      "maxLength": 120
+    },
+    "functional_status": {
+      "description": "Functional state of the product",
+      "type": "string",
+      "enum": [
+        "fully-functional",
+        "partially-functional",
+        "non-functional",
+        "untested"
+      ]
+    },
+    "lifecycle_stage": {
+      "description": "Current stage in product lifecycle (ESPR/UNTP aligned)",
+      "type": "string",
+      "enum": [
+        "production",
+        "in-use",
+        "end-of-first-use",
+        "refurbished",
+        "end-of-life"
+      ]
+    },
+    "material_ids": {
+      "description": "References to constituent MaterialDNA identifiers (composition link)",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z]{2}-[A-Z]{3}-\\d{4}-[A-Z]+-[A-Z0-9]{6,}$"
+      },
+      "examples": [
+        ["DE-MUC-2025-METAL-4EB84C", "DE-MUC-2025-PLASTIC-96FE78"]
+      ]
+    },
+    "dimensions": {
+      "description": "Physical dimensions of the product",
+      "type": "object",
+      "properties": {
+        "length_cm": {
+          "description": "Length in centimeters",
+          "type": "number",
+          "minimum": 0
+        },
+        "width_cm": {
+          "description": "Width in centimeters",
+          "type": "number",
+          "minimum": 0
+        },
+        "height_cm": {
+          "description": "Height in centimeters",
+          "type": "number",
+          "minimum": 0
+        },
+        "weight_kg": {
+          "description": "Weight in kilograms",
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "images": {
+      "description": "Photos of the product",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uri"
+      },
+      "maxItems": 10
+    },
+    "reuse_potential": {
+      "description": "Free-text notes on reuse potential and condition details",
+      "type": "string",
+      "maxLength": 500,
+      "examples": [
+        "Fully functional standing desks from office clearance. Minor cosmetic wear."
+      ]
+    },
+    "certifications": {
+      "description": "List of certifications",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "location": {
-      "description": "Geographic location of material",
+      "description": "Geographic location of product",
       "type": "object",
       "required": [
         "lat",
@@ -157,75 +281,26 @@
           "description": "Latitude",
           "type": "number",
           "minimum": -90,
-          "maximum": 90,
-          "examples": [
-            48.1351
-          ]
+          "maximum": 90
         },
         "lon": {
           "description": "Longitude",
           "type": "number",
           "minimum": -180,
-          "maximum": 180,
-          "examples": [
-            11.582
-          ]
+          "maximum": 180
         },
         "address": {
           "description": "Human-readable address",
-          "type": "string",
-          "examples": [
-            "Recycling Center Munich, Sachsenstra\u00dfe 25"
-          ]
+          "type": "string"
         }
       }
-    },
-    "available_from": {
-      "description": "When material becomes available (ISO 8601)",
-      "type": "string",
-      "format": "date-time",
-      "examples": [
-        "2025-05-27T10:00:00Z"
-      ]
-    },
-    "expires": {
-      "description": "When material expires or must be collected (ISO 8601)",
-      "type": "string",
-      "format": "date-time",
-      "examples": [
-        "2025-06-03T10:00:00Z"
-      ]
-    },
-    "certifications": {
-      "description": "List of certifications",
-      "type": "array",
-      "items": {
-        "type": "string",
-        "examples": [
-          "food-grade",
-          "iso-14001",
-          "organic-eu"
-        ]
-      }
-    },
-    "images": {
-      "description": "Photos of the material",
-      "type": "array",
-      "items": {
-        "type": "string",
-        "format": "uri",
-        "examples": [
-          "https://example.com/material-photo.jpg"
-        ]
-      },
-      "maxItems": 10
     },
     "contact": {
       "description": "Reserved. Personal contact details are not permitted in minimal interop payloads.",
       "not": {}
     },
     "passport": {
-      "description": "Optional regulatory interoperability metadata for DPP-style integrations (ESPR, UNTP, Battery Passport, PPWR, NKWS aligned).",
+      "description": "Optional regulatory interoperability metadata for DPP-style integrations (ESPR Art. 9-10, UNTP ProductPassport aligned).",
       "type": "object",
       "properties": {
         "passport_id": {
@@ -254,7 +329,11 @@
           "type": "string",
           "maxLength": 160
         },
-        "issuer": {
+        "issued_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "issuer_node": {
           "type": "string",
           "maxLength": 160
         },
@@ -321,8 +400,7 @@
         },
         "carbon_footprint_unit": {
           "description": "Declared unit for carbon footprint",
-          "type": "string",
-          "examples": ["per_kg", "per_unit"]
+          "type": "string"
         },
         "recycled_content_percent": {
           "description": "Percentage of recycled content (ESPR & PPWR)",
@@ -371,11 +449,11 @@
           }
         },
         "hazardous": {
-          "description": "UNTP hazardous material flag",
+          "description": "Hazardous product flag",
           "type": "boolean"
         },
         "material_safety_info_url": {
-          "description": "Material safety data sheet URL (recommended if hazardous is true)",
+          "description": "Material safety data sheet URL",
           "type": "string",
           "format": "uri"
         },
@@ -393,64 +471,11 @@
       },
       "additionalProperties": true
     },
-    "classification": {
-      "description": "Optional classification hints for customs, waste, or product-specific rules.",
-      "type": "object",
-      "properties": {
-        "ewc_code": {
-          "type": "string",
-          "pattern": "^\\d{2}(\\s\\d{2}){2}$"
-        },
-        "hs_code": {
-          "type": "string",
-          "pattern": "^\\d{6,10}$"
-        },
-        "cn_code": {
-          "type": "string",
-          "pattern": "^\\d{8}$"
-        },
-        "battery_category": {
-          "type": "string",
-          "enum": [
-            "portable",
-            "lmt",
-            "sli",
-            "industrial",
-            "ev"
-          ]
-        },
-        "prodcom_code": {
-          "description": "EU PRODCOM classification code",
-          "type": "string",
-          "pattern": "^\\d{8}$"
-        },
-        "taric_code": {
-          "description": "EU TARIC classification code",
-          "type": "string",
-          "pattern": "^\\d{10}$"
-        },
-        "nace_code": {
-          "description": "NACE economic activity code",
-          "type": "string",
-          "pattern": "^[A-Z]\\d{2}(\\.\\d{1,2})?$"
-        },
-        "scip_id": {
-          "description": "ECHA SCIP database reference",
-          "type": "string"
-        },
-        "waste_framework_code": {
-          "description": "EU Waste Framework Directive code",
-          "type": "string"
-        }
-      },
-      "additionalProperties": true
-    },
     "traceability": {
       "description": "Optional chain-of-custody, retention, and evidence references.",
       "type": "object",
       "properties": {
         "batch_id": {
-          "description": "Machine-readable batch identifier for chain-of-custody traceability and regulatory evidence.",
           "type": "string",
           "maxLength": 120
         },
@@ -461,30 +486,6 @@
         "lot_number": {
           "type": "string",
           "maxLength": 120
-        },
-        "source_operator_id": {
-          "type": "string",
-          "maxLength": 120
-        },
-        "facility_id": {
-          "type": "string",
-          "maxLength": 120
-        },
-        "retention_until": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "document_refs": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "format": "uri"
-          },
-          "maxItems": 20
-        },
-        "due_diligence_ref": {
-          "type": "string",
-          "maxLength": 160
         },
         "epcis_event_refs": {
           "description": "ISO 19987 (EPCIS) event references for supply chain traceability",
@@ -499,10 +500,7 @@
               },
               "event_id": { "type": "string" },
               "event_url": { "type": "string", "format": "uri" },
-              "hash_digest": {
-                "description": "Integrity hash (UNTP SecureLink)",
-                "type": "string"
-              },
+              "hash_digest": { "type": "string" },
               "hash_method": {
                 "type": "string",
                 "enum": ["SHA-256", "SHA-384", "SHA-512"]
@@ -511,48 +509,16 @@
           }
         },
         "chain_of_custody_url": {
-          "description": "Full chain-of-custody evidence URL",
           "type": "string",
           "format": "uri"
         },
         "w3c_vc_credential_id": {
-          "description": "W3C Verifiable Credential ID (if wrapped in VC)",
           "type": "string",
           "format": "uri"
         },
         "w3c_vc_issuer": {
-          "description": "W3C VC issuer DID/URL",
           "type": "string",
           "format": "uri"
-        }
-      },
-      "additionalProperties": true
-    },
-    "metadata": {
-      "description": "Additional metadata",
-      "type": "object",
-      "properties": {
-        "source": {
-          "type": "string",
-          "examples": [
-            "consumer-collection",
-            "industrial",
-            "commercial"
-          ]
-        },
-        "batch_number": {
-          "description": "Human-readable batch label for internal tracking. For regulatory traceability, prefer traceability.batch_id.",
-          "type": "string",
-          "examples": [
-            "2025-W22-01"
-          ]
-        },
-        "notes": {
-          "type": "string",
-          "maxLength": 500,
-          "examples": [
-            "Clean, sorted PET bottles"
-          ]
         }
       },
       "additionalProperties": true
@@ -565,18 +531,15 @@
         "required": ["claim_id"],
         "properties": {
           "claim_id": {
-            "description": "Unique claim identifier",
             "type": "string"
           },
           "description": {
             "type": "string"
           },
           "reference_standard": {
-            "description": "Standard name or number",
             "type": "string"
           },
           "reference_regulation": {
-            "description": "EU regulation reference",
             "type": "string"
           },
           "conformity_topic": {
@@ -593,7 +556,6 @@
             }
           },
           "conformance": {
-            "description": "Whether the claim is met",
             "type": "boolean"
           },
           "assessment_date": {
@@ -601,12 +563,16 @@
             "format": "date-time"
           },
           "conformity_evidence_url": {
-            "description": "Link to attestation or evidence",
             "type": "string",
             "format": "uri"
           }
         }
       }
+    },
+    "metadata": {
+      "description": "Additional metadata",
+      "type": "object",
+      "additionalProperties": true
     }
   },
   "additionalProperties": true
